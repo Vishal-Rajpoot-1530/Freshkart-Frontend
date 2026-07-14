@@ -11,10 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WishlistRouteImport } from './routes/wishlist'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as OtpRouteImport } from './routes/otp'
 import { Route as OrdersRouteImport } from './routes/orders'
 import { Route as OrderSuccessRouteImport } from './routes/order-success'
 import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as HelpRouteImport } from './routes/help'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CheckoutRouteImport } from './routes/checkout'
@@ -36,9 +39,19 @@ const SearchRoute = SearchRouteImport.update({
   path: '/search',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RegisterRoute = RegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ProfileRoute = ProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OtpRoute = OtpRouteImport.update({
+  id: '/otp',
+  path: '/otp',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OrdersRoute = OrdersRouteImport.update({
@@ -54,6 +67,11 @@ const OrderSuccessRoute = OrderSuccessRouteImport.update({
 const NotificationsRoute = NotificationsRouteImport.update({
   id: '/notifications',
   path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const HelpRoute = HelpRouteImport.update({
@@ -115,10 +133,13 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/help': typeof HelpRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-success': typeof OrderSuccessRoute
   '/orders': typeof OrdersRoute
+  '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -133,10 +154,13 @@ export interface FileRoutesByTo {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/help': typeof HelpRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-success': typeof OrderSuccessRoute
   '/orders': typeof OrdersRoute
+  '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -152,10 +176,13 @@ export interface FileRoutesById {
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
   '/help': typeof HelpRoute
+  '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/order-success': typeof OrderSuccessRoute
   '/orders': typeof OrdersRoute
+  '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
+  '/register': typeof RegisterRoute
   '/search': typeof SearchRoute
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
@@ -172,10 +199,13 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/help'
+    | '/login'
     | '/notifications'
     | '/order-success'
     | '/orders'
+    | '/otp'
     | '/profile'
+    | '/register'
     | '/search'
     | '/wishlist'
     | '/category/$slug'
@@ -190,10 +220,13 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/help'
+    | '/login'
     | '/notifications'
     | '/order-success'
     | '/orders'
+    | '/otp'
     | '/profile'
+    | '/register'
     | '/search'
     | '/wishlist'
     | '/category/$slug'
@@ -208,10 +241,13 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/contact'
     | '/help'
+    | '/login'
     | '/notifications'
     | '/order-success'
     | '/orders'
+    | '/otp'
     | '/profile'
+    | '/register'
     | '/search'
     | '/wishlist'
     | '/category/$slug'
@@ -227,10 +263,13 @@ export interface RootRouteChildren {
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
   HelpRoute: typeof HelpRoute
+  LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   OrderSuccessRoute: typeof OrderSuccessRoute
   OrdersRoute: typeof OrdersRoute
+  OtpRoute: typeof OtpRoute
   ProfileRoute: typeof ProfileRoute
+  RegisterRoute: typeof RegisterRoute
   SearchRoute: typeof SearchRoute
   WishlistRoute: typeof WishlistRoute
   CategorySlugRoute: typeof CategorySlugRoute
@@ -254,11 +293,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SearchRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/register': {
+      id: '/register'
+      path: '/register'
+      fullPath: '/register'
+      preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/profile': {
       id: '/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/otp': {
+      id: '/otp'
+      path: '/otp'
+      fullPath: '/otp'
+      preLoaderRoute: typeof OtpRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/orders': {
@@ -280,6 +333,13 @@ declare module '@tanstack/react-router' {
       path: '/notifications'
       fullPath: '/notifications'
       preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/help': {
@@ -363,10 +423,13 @@ const rootRouteChildren: RootRouteChildren = {
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
   HelpRoute: HelpRoute,
+  LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   OrderSuccessRoute: OrderSuccessRoute,
   OrdersRoute: OrdersRoute,
+  OtpRoute: OtpRoute,
   ProfileRoute: ProfileRoute,
+  RegisterRoute: RegisterRoute,
   SearchRoute: SearchRoute,
   WishlistRoute: WishlistRoute,
   CategorySlugRoute: CategorySlugRoute,
