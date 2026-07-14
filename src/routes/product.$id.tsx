@@ -64,7 +64,7 @@ function ProductPage() {
           <div>
             <div className="flex items-center gap-2 text-xs">
               <span className="rounded-md bg-primary-soft px-2 py-0.5 font-semibold text-primary">{p.brand}</span>
-              {p.tags.map((t) => <span key={t} className="rounded-md bg-offer/20 px-2 py-0.5 font-semibold text-offer-foreground">{t}</span>)}
+              {p.tags.map((t: string) => <span key={t} className="rounded-md bg-offer/20 px-2 py-0.5 font-semibold text-offer-foreground">{t}</span>)}
             </div>
             <h1 className="mt-2 font-display text-3xl font-black">{p.name}</h1>
             <div className="text-sm text-muted-foreground">{p.weight}</div>
