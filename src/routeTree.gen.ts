@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WishlistRouteImport } from './routes/wishlist'
+import { Route as SellerRouteImport } from './routes/seller'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as RiderRouteImport } from './routes/rider'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OtpRouteImport } from './routes/otp'
@@ -35,9 +37,19 @@ const WishlistRoute = WishlistRouteImport.update({
   path: '/wishlist',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SellerRoute = SellerRouteImport.update({
+  id: '/seller',
+  path: '/seller',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RiderRoute = RiderRouteImport.update({
+  id: '/rider',
+  path: '/rider',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -147,7 +159,9 @@ export interface FileRoutesByFullPath {
   '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/rider': typeof RiderRoute
   '/search': typeof SearchRoute
+  '/seller': typeof SellerRoute
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
@@ -169,7 +183,9 @@ export interface FileRoutesByTo {
   '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/rider': typeof RiderRoute
   '/search': typeof SearchRoute
+  '/seller': typeof SellerRoute
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
@@ -192,7 +208,9 @@ export interface FileRoutesById {
   '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/rider': typeof RiderRoute
   '/search': typeof SearchRoute
+  '/seller': typeof SellerRoute
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
@@ -216,7 +234,9 @@ export interface FileRouteTypes {
     | '/otp'
     | '/profile'
     | '/register'
+    | '/rider'
     | '/search'
+    | '/seller'
     | '/wishlist'
     | '/category/$slug'
     | '/order/$id'
@@ -238,7 +258,9 @@ export interface FileRouteTypes {
     | '/otp'
     | '/profile'
     | '/register'
+    | '/rider'
     | '/search'
+    | '/seller'
     | '/wishlist'
     | '/category/$slug'
     | '/order/$id'
@@ -260,7 +282,9 @@ export interface FileRouteTypes {
     | '/otp'
     | '/profile'
     | '/register'
+    | '/rider'
     | '/search'
+    | '/seller'
     | '/wishlist'
     | '/category/$slug'
     | '/order/$id'
@@ -283,7 +307,9 @@ export interface RootRouteChildren {
   OtpRoute: typeof OtpRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
+  RiderRoute: typeof RiderRoute
   SearchRoute: typeof SearchRoute
+  SellerRoute: typeof SellerRoute
   WishlistRoute: typeof WishlistRoute
   CategorySlugRoute: typeof CategorySlugRoute
   OrderIdRoute: typeof OrderIdRoute
@@ -299,11 +325,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WishlistRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/seller': {
+      id: '/seller'
+      path: '/seller'
+      fullPath: '/seller'
+      preLoaderRoute: typeof SellerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rider': {
+      id: '/rider'
+      path: '/rider'
+      fullPath: '/rider'
+      preLoaderRoute: typeof RiderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -451,7 +491,9 @@ const rootRouteChildren: RootRouteChildren = {
   OtpRoute: OtpRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
+  RiderRoute: RiderRoute,
   SearchRoute: SearchRoute,
+  SellerRoute: SellerRoute,
   WishlistRoute: WishlistRoute,
   CategorySlugRoute: CategorySlugRoute,
   OrderIdRoute: OrderIdRoute,
