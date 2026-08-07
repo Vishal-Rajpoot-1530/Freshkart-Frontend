@@ -39,12 +39,13 @@ export function Footer() {
           { to: "/help", label: "Refund policy" },
           { to: "/contact", label: "Report an issue" },
         ]} />
-        <FooterCol title="Legal" links={[
-          { to: "/help", label: "Terms of service" },
-          { to: "/help", label: "Privacy policy" },
-          { to: "/help", label: "Cookies" },
-          { to: "/help", label: "Licenses" },
+        <FooterCol title="Partners" links={[
+          { to: "/seller", label: "Seller centre" },
+          { to: "/rider", label: "Rider hub" },
+          { to: "/admin", label: "Admin console" },
+          { to: "/help", label: "Terms & privacy" },
         ]} />
+
       </div>
 
       <div className="border-t">

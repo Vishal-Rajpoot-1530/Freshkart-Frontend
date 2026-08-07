@@ -10,7 +10,9 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WishlistRouteImport } from './routes/wishlist'
+import { Route as SellerRouteImport } from './routes/seller'
 import { Route as SearchRouteImport } from './routes/search'
+import { Route as RiderRouteImport } from './routes/rider'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as OtpRouteImport } from './routes/otp'
@@ -22,6 +24,7 @@ import { Route as HelpRouteImport } from './routes/help'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as CheckoutRouteImport } from './routes/checkout'
 import { Route as CartRouteImport } from './routes/cart'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AddressesRouteImport } from './routes/addresses'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
@@ -34,9 +37,19 @@ const WishlistRoute = WishlistRouteImport.update({
   path: '/wishlist',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SellerRoute = SellerRouteImport.update({
+  id: '/seller',
+  path: '/seller',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RiderRoute = RiderRouteImport.update({
+  id: '/rider',
+  path: '/rider',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -94,6 +107,11 @@ const CartRoute = CartRouteImport.update({
   path: '/cart',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AddressesRoute = AddressesRouteImport.update({
   id: '/addresses',
   path: '/addresses',
@@ -129,6 +147,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/addresses': typeof AddressesRoute
+  '/admin': typeof AdminRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
@@ -140,7 +159,9 @@ export interface FileRoutesByFullPath {
   '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/rider': typeof RiderRoute
   '/search': typeof SearchRoute
+  '/seller': typeof SellerRoute
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
@@ -150,6 +171,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/addresses': typeof AddressesRoute
+  '/admin': typeof AdminRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
@@ -161,7 +183,9 @@ export interface FileRoutesByTo {
   '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/rider': typeof RiderRoute
   '/search': typeof SearchRoute
+  '/seller': typeof SellerRoute
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
@@ -172,6 +196,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/addresses': typeof AddressesRoute
+  '/admin': typeof AdminRoute
   '/cart': typeof CartRoute
   '/checkout': typeof CheckoutRoute
   '/contact': typeof ContactRoute
@@ -183,7 +208,9 @@ export interface FileRoutesById {
   '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
+  '/rider': typeof RiderRoute
   '/search': typeof SearchRoute
+  '/seller': typeof SellerRoute
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
@@ -195,6 +222,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/addresses'
+    | '/admin'
     | '/cart'
     | '/checkout'
     | '/contact'
@@ -206,7 +234,9 @@ export interface FileRouteTypes {
     | '/otp'
     | '/profile'
     | '/register'
+    | '/rider'
     | '/search'
+    | '/seller'
     | '/wishlist'
     | '/category/$slug'
     | '/order/$id'
@@ -216,6 +246,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/addresses'
+    | '/admin'
     | '/cart'
     | '/checkout'
     | '/contact'
@@ -227,7 +258,9 @@ export interface FileRouteTypes {
     | '/otp'
     | '/profile'
     | '/register'
+    | '/rider'
     | '/search'
+    | '/seller'
     | '/wishlist'
     | '/category/$slug'
     | '/order/$id'
@@ -237,6 +270,7 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/addresses'
+    | '/admin'
     | '/cart'
     | '/checkout'
     | '/contact'
@@ -248,7 +282,9 @@ export interface FileRouteTypes {
     | '/otp'
     | '/profile'
     | '/register'
+    | '/rider'
     | '/search'
+    | '/seller'
     | '/wishlist'
     | '/category/$slug'
     | '/order/$id'
@@ -259,6 +295,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AddressesRoute: typeof AddressesRoute
+  AdminRoute: typeof AdminRoute
   CartRoute: typeof CartRoute
   CheckoutRoute: typeof CheckoutRoute
   ContactRoute: typeof ContactRoute
@@ -270,7 +307,9 @@ export interface RootRouteChildren {
   OtpRoute: typeof OtpRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
+  RiderRoute: typeof RiderRoute
   SearchRoute: typeof SearchRoute
+  SellerRoute: typeof SellerRoute
   WishlistRoute: typeof WishlistRoute
   CategorySlugRoute: typeof CategorySlugRoute
   OrderIdRoute: typeof OrderIdRoute
@@ -286,11 +325,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof WishlistRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/seller': {
+      id: '/seller'
+      path: '/seller'
+      fullPath: '/seller'
+      preLoaderRoute: typeof SellerRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
       fullPath: '/search'
       preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/rider': {
+      id: '/rider'
+      path: '/rider'
+      fullPath: '/rider'
+      preLoaderRoute: typeof RiderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -370,6 +423,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/addresses': {
       id: '/addresses'
       path: '/addresses'
@@ -419,6 +479,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AddressesRoute: AddressesRoute,
+  AdminRoute: AdminRoute,
   CartRoute: CartRoute,
   CheckoutRoute: CheckoutRoute,
   ContactRoute: ContactRoute,
@@ -430,7 +491,9 @@ const rootRouteChildren: RootRouteChildren = {
   OtpRoute: OtpRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
+  RiderRoute: RiderRoute,
   SearchRoute: SearchRoute,
+  SellerRoute: SellerRoute,
   WishlistRoute: WishlistRoute,
   CategorySlugRoute: CategorySlugRoute,
   OrderIdRoute: OrderIdRoute,
@@ -439,13 +502,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
