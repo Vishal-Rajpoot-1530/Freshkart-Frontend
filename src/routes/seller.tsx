@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { IndianRupee, Package, Star, Percent, Plus, PackageX } from "lucide-react";
 import { ConsoleLayout, StatCard, Panel, Pill, Bars } from "@/components/console/ConsoleLayout";
 import { products } from "@/data/products";
+import { usePartners } from "@/context/PartnersContext";
+import { StatusPill } from "@/components/console/PartnerControls";
 
 export const Route = createFileRoute("/seller")({
   head: () => ({
@@ -31,8 +33,23 @@ const incoming = [
 
 function SellerPage() {
   const catalogue = products.slice(20, 28);
+  const { seller, canAcceptOrders } = usePartners();
+  const me = seller("SLR-1001");
+  const active = canAcceptOrders("SLR-1001");
   return (
-    <ConsoleLayout badge="Seller" title="Green Basket Mart" subtitle="Partner store · HSR Layout · onboarded Mar 2024">
+    <ConsoleLayout
+      badge="Seller"
+      title="Green Basket Mart"
+      subtitle={active ? "Partner store · HSR Layout · onboarded Mar 2024" : "Partner store · HSR Layout · order acceptance blocked"}
+    >
+      {!active && (
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-discount/40 bg-discount/10 p-4">
+          {me && <StatusPill status={me.status} />}
+          <p className="text-sm font-semibold text-discount">
+            Your store isn't verified, so new orders can't be accepted. Upload pending documents for admin review.
+          </p>
+        </div>
+      )}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Sales today" value="₹23,140" delta="+9.6%" icon={IndianRupee} />
         <StatCard label="Orders fulfilled" value="184" icon={Package} />
@@ -130,8 +147,12 @@ function SellerPage() {
                     <Pill label={o.status} tone={o.tone} />
                   </div>
                   <div className="mt-1 text-xs text-muted-foreground">{o.items} items · ₹{o.total} · SLA {o.sla}</div>
-                  <button className="mt-2 w-full rounded-lg border px-3 py-1.5 text-xs font-semibold hover:border-primary transition-colors">
-                    Open picklist
+                  <button
+                    disabled={!active}
+                    title={active ? undefined : "Store must be verified to accept orders"}
+                    className="mt-2 w-full rounded-lg border px-3 py-1.5 text-xs font-semibold hover:border-primary transition-colors disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:border-border"
+                  >
+                    {active ? "Open picklist" : "Locked"}
                   </button>
                 </li>
               ))}
