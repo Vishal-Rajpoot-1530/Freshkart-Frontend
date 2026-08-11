@@ -2,6 +2,8 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Bike, IndianRupee, Timer, Navigation, MapPin, Phone, CheckCircle2, Star } from "lucide-react";
 import { ConsoleLayout, StatCard, Panel, Pill, Bars } from "@/components/console/ConsoleLayout";
 import { products } from "@/data/products";
+import { usePartners } from "@/context/PartnersContext";
+import { StatusPill } from "@/components/console/PartnerControls";
 
 export const Route = createFileRoute("/rider")({
   head: () => ({
@@ -36,8 +38,23 @@ const timeline = [
 ];
 
 function RiderPage() {
+  const { rider, canAcceptOrders } = usePartners();
+  const me = rider("RDR-2001");
+  const active = canAcceptOrders("RDR-2001");
   return (
-    <ConsoleLayout badge="Rider" title="Hey Imran, you're online" subtitle="3 orders in your queue · HSR Layout zone">
+    <ConsoleLayout
+      badge="Rider"
+      title={active ? "Hey Imran, you're online" : "Hey Imran, you're offline"}
+      subtitle={active ? "3 orders in your queue · HSR Layout zone" : "Account not verified · order acceptance is blocked"}
+    >
+      {!active && (
+        <div className="mb-4 flex flex-wrap items-center gap-3 rounded-2xl border border-discount/40 bg-discount/10 p-4">
+          {me && <StatusPill status={me.status} />}
+          <p className="text-sm font-semibold text-discount">
+            Your account isn't verified yet, so you can't accept orders. FreshKart admin will review your documents shortly.
+          </p>
+        </div>
+      )}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <StatCard label="Earnings today" value="₹1,286" delta="+₹210" icon={IndianRupee} />
         <StatCard label="Deliveries today" value="14" icon={Bike} />
@@ -114,7 +131,13 @@ function RiderPage() {
                   <div className="mt-1 text-xs text-muted-foreground">{q.store} → {q.drop}</div>
                   <div className="mt-2 flex items-center justify-between">
                     <Pill label={`${q.km} km · ${q.items} items`} />
-                    <button className="rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground">Accept</button>
+                    <button
+                      disabled={!active}
+                      title={active ? undefined : "Verify your account to accept orders"}
+                      className="rounded-lg bg-primary px-3 py-1.5 text-xs font-bold text-primary-foreground disabled:cursor-not-allowed disabled:bg-muted disabled:text-muted-foreground"
+                    >
+                      Accept
+                    </button>
                   </div>
                 </li>
               ))}
