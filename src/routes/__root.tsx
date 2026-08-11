@@ -12,6 +12,7 @@ import { useEffect, type ReactNode } from "react";
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppProvider } from "@/context/AppContext";
+import { PartnersProvider } from "@/context/PartnersContext";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -87,8 +88,10 @@ function RootComponent() {
   return (
     <QueryClientProvider client={queryClient}>
       <AppProvider>
-        <Outlet />
-        <Toaster position="top-center" richColors />
+        <PartnersProvider>
+          <Outlet />
+          <Toaster position="top-center" richColors />
+        </PartnersProvider>
       </AppProvider>
     </QueryClientProvider>
   );
