@@ -29,6 +29,7 @@ import { Route as AddressesRouteImport } from './routes/addresses'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as SellerLoginRouteImport } from './routes/seller.login'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as OrderIdRouteImport } from './routes/order.$id'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
@@ -135,6 +136,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AdminRoute,
 } as any)
+const SellerLoginRoute = SellerLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => SellerRoute,
+} as any)
 const ProductIdRoute = ProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
@@ -179,11 +185,12 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/rider': typeof RiderRoute
   '/search': typeof SearchRoute
-  '/seller': typeof SellerRoute
+  '/seller': typeof SellerRouteWithChildren
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
   '/product/$id': typeof ProductIdRoute
+  '/seller/login': typeof SellerLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/riders/$id': typeof AdminRidersIdRoute
   '/admin/sellers/$id': typeof AdminSellersIdRoute
@@ -205,11 +212,12 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/rider': typeof RiderRoute
   '/search': typeof SearchRoute
-  '/seller': typeof SellerRoute
+  '/seller': typeof SellerRouteWithChildren
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
   '/product/$id': typeof ProductIdRoute
+  '/seller/login': typeof SellerLoginRoute
   '/admin': typeof AdminIndexRoute
   '/admin/riders/$id': typeof AdminRidersIdRoute
   '/admin/sellers/$id': typeof AdminSellersIdRoute
@@ -233,11 +241,12 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/rider': typeof RiderRoute
   '/search': typeof SearchRoute
-  '/seller': typeof SellerRoute
+  '/seller': typeof SellerRouteWithChildren
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
   '/product/$id': typeof ProductIdRoute
+  '/seller/login': typeof SellerLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/riders/$id': typeof AdminRidersIdRoute
   '/admin/sellers/$id': typeof AdminSellersIdRoute
@@ -267,6 +276,7 @@ export interface FileRouteTypes {
     | '/category/$slug'
     | '/order/$id'
     | '/product/$id'
+    | '/seller/login'
     | '/admin/'
     | '/admin/riders/$id'
     | '/admin/sellers/$id'
@@ -293,6 +303,7 @@ export interface FileRouteTypes {
     | '/category/$slug'
     | '/order/$id'
     | '/product/$id'
+    | '/seller/login'
     | '/admin'
     | '/admin/riders/$id'
     | '/admin/sellers/$id'
@@ -320,6 +331,7 @@ export interface FileRouteTypes {
     | '/category/$slug'
     | '/order/$id'
     | '/product/$id'
+    | '/seller/login'
     | '/admin/'
     | '/admin/riders/$id'
     | '/admin/sellers/$id'
@@ -343,7 +355,7 @@ export interface RootRouteChildren {
   RegisterRoute: typeof RegisterRoute
   RiderRoute: typeof RiderRoute
   SearchRoute: typeof SearchRoute
-  SellerRoute: typeof SellerRoute
+  SellerRoute: typeof SellerRouteWithChildren
   WishlistRoute: typeof WishlistRoute
   CategorySlugRoute: typeof CategorySlugRoute
   OrderIdRoute: typeof OrderIdRoute
@@ -492,6 +504,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/seller/login': {
+      id: '/seller/login'
+      path: '/login'
+      fullPath: '/seller/login'
+      preLoaderRoute: typeof SellerLoginRouteImport
+      parentRoute: typeof SellerRoute
+    }
     '/product/$id': {
       id: '/product/$id'
       path: '/product/$id'
@@ -544,6 +563,17 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface SellerRouteChildren {
+  SellerLoginRoute: typeof SellerLoginRoute
+}
+
+const SellerRouteChildren: SellerRouteChildren = {
+  SellerLoginRoute: SellerLoginRoute,
+}
+
+const SellerRouteWithChildren =
+  SellerRoute._addFileChildren(SellerRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
@@ -562,7 +592,7 @@ const rootRouteChildren: RootRouteChildren = {
   RegisterRoute: RegisterRoute,
   RiderRoute: RiderRoute,
   SearchRoute: SearchRoute,
-  SellerRoute: SellerRoute,
+  SellerRoute: SellerRouteWithChildren,
   WishlistRoute: WishlistRoute,
   CategorySlugRoute: CategorySlugRoute,
   OrderIdRoute: OrderIdRoute,
