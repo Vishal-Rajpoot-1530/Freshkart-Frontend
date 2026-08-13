@@ -13,6 +13,8 @@ import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
 import { AppProvider } from "@/context/AppContext";
 import { PartnersProvider } from "@/context/PartnersContext";
+import { PartnerAuthProvider } from "@/context/PartnerAuthContext";
+import { CatalogueProvider } from "@/context/CatalogueContext";
 import { Toaster } from "@/components/ui/sonner";
 
 function NotFoundComponent() {
@@ -89,8 +91,12 @@ function RootComponent() {
     <QueryClientProvider client={queryClient}>
       <AppProvider>
         <PartnersProvider>
-          <Outlet />
-          <Toaster position="top-center" richColors />
+          <PartnerAuthProvider>
+            <CatalogueProvider>
+              <Outlet />
+              <Toaster position="top-center" richColors />
+            </CatalogueProvider>
+          </PartnerAuthProvider>
         </PartnersProvider>
       </AppProvider>
     </QueryClientProvider>

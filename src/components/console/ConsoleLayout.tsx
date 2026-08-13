@@ -1,13 +1,33 @@
 import type { ReactNode } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useRouter } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { LayoutDashboard, Bike, Store, ArrowLeft, Bell, Search } from "lucide-react";
+import { LayoutDashboard, Bike, Store, ArrowLeft, Bell, Search, LogOut } from "lucide-react";
+import { usePartnerAuth } from "@/context/PartnerAuthContext";
 
 const portals = [
   { to: "/admin" as const, label: "Admin", icon: LayoutDashboard },
   { to: "/rider" as const, label: "Rider", icon: Bike },
   { to: "/seller" as const, label: "Seller", icon: Store },
 ];
+
+function SessionButton() {
+  const { session, signOut } = usePartnerAuth();
+  const router = useRouter();
+  if (!session) return null;
+  return (
+    <button
+      onClick={() => {
+        const to = session.role === "seller" ? "/seller/login" : "/rider/login";
+        signOut();
+        router.navigate({ to });
+      }}
+      className="flex items-center gap-1.5 rounded-xl border bg-card px-3 py-2 text-xs font-semibold hover:border-primary transition-colors"
+      aria-label="Sign out of partner console"
+    >
+      <LogOut className="size-3.5" /> <span className="hidden sm:inline">Sign out</span>
+    </button>
+  );
+}
 
 export function ConsoleLayout({
   title,
@@ -21,7 +41,7 @@ export function ConsoleLayout({
   children: ReactNode;
 }) {
   return (
-    <div className="min-h-dvh bg-surface">
+    <div className="min-h-dvh bg-surface flex flex-col">
       <header className="sticky top-0 z-40 glass border-b">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="flex h-16 items-center gap-3">
@@ -62,6 +82,7 @@ export function ConsoleLayout({
                 <Bell className="size-5" />
                 <span className="absolute top-2 right-2 size-2 rounded-full bg-discount" />
               </button>
+              <SessionButton />
               <Link
                 to="/"
                 className="flex items-center gap-1.5 rounded-xl border bg-card px-3 py-2 text-xs font-semibold hover:border-primary transition-colors"
@@ -73,7 +94,7 @@ export function ConsoleLayout({
         </div>
       </header>
 
-      <main className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6 pb-16">
+      <main className="flex-1 mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8 py-6 pb-16">
         <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
           <div className="flex flex-wrap items-end justify-between gap-3">
             <div>
@@ -88,7 +109,77 @@ export function ConsoleLayout({
           <div className="mt-6">{children}</div>
         </motion.div>
       </main>
+
+      <ConsoleFooter badge={badge} />
     </div>
+  );
+}
+
+export function ConsoleFooter({ badge }: { badge: string }) {
+  const groups = [
+    {
+      title: "Consoles",
+      links: [
+        { to: "/admin" as const, label: "Admin dashboard" },
+        { to: "/seller" as const, label: "Seller centre" },
+        { to: "/rider" as const, label: "Rider hub" },
+      ],
+    },
+    {
+      title: "Partner resources",
+      links: [
+        { to: "/help" as const, label: "Help centre" },
+        { to: "/contact" as const, label: "Contact support" },
+        { to: "/about" as const, label: "About FreshKart" },
+      ],
+    },
+    {
+      title: "Storefront",
+      links: [
+        { to: "/" as const, label: "Home" },
+        { to: "/orders" as const, label: "Orders" },
+        { to: "/notifications" as const, label: "Notifications" },
+      ],
+    },
+  ];
+
+  return (
+    <footer className="border-t bg-card">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+          <div>
+            <div className="flex items-center gap-2">
+              <div className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground font-black">F</div>
+              <div>
+                <div className="font-display text-lg font-black leading-none">FreshKart</div>
+                <div className="text-[10px] text-muted-foreground">{badge} console</div>
+              </div>
+            </div>
+            <p className="mt-3 text-xs text-muted-foreground max-w-xs">
+              Partner tooling for stores, riders and operations teams. All figures shown are demo data.
+            </p>
+          </div>
+          {groups.map((g) => (
+            <div key={g.title}>
+              <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">{g.title}</div>
+              <ul className="mt-3 space-y-2 text-sm">
+                {g.links.map((l) => (
+                  <li key={l.label}>
+                    <Link to={l.to} className="text-muted-foreground hover:text-primary transition-colors">
+                      {l.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+        <div className="mt-8 flex flex-wrap items-center justify-between gap-3 border-t pt-5 text-xs text-muted-foreground">
+          <span>© {new Date().getFullYear()} FreshKart Retail Pvt Ltd · Partner platform</span>
+          <span>Support: partners@freshkart.in · 1800 123 4567</span>
+        </div>
+      </div>
+    </footer>
   );
 }
 
@@ -98,20 +189,25 @@ export function StatCard({
   delta,
   icon: Icon,
   tone = "primary",
+  onClick,
+  hint,
 }: {
   label: string;
   value: string;
   delta?: string;
   icon: React.ComponentType<{ className?: string }>;
   tone?: "primary" | "offer" | "discount";
+  onClick?: () => void;
+  hint?: string;
 }) {
   const tones = {
     primary: "bg-primary-soft text-primary",
     offer: "bg-offer/20 text-offer-foreground",
     discount: "bg-discount/10 text-discount",
   } as const;
-  return (
-    <div className="rounded-2xl border bg-card p-5 shadow-soft">
+
+  const body = (
+    <>
       <div className="flex items-start justify-between gap-3">
         <div className={`grid size-10 place-items-center rounded-xl ${tones[tone]}`}>
           <Icon className="size-5" />
@@ -120,8 +216,23 @@ export function StatCard({
       </div>
       <div className="mt-4 font-display text-2xl font-black">{value}</div>
       <div className="text-xs text-muted-foreground">{label}</div>
-    </div>
+      {onClick && <div className="mt-2 text-[11px] font-semibold text-primary">{hint ?? "View details"} →</div>}
+    </>
   );
+
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        onClick={onClick}
+        className="text-left rounded-2xl border bg-card p-5 shadow-soft transition-all hover:border-primary hover:shadow-lift focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      >
+        {body}
+      </button>
+    );
+  }
+
+  return <div className="rounded-2xl border bg-card p-5 shadow-soft">{body}</div>;
 }
 
 export function Panel({ title, action, children }: { title: string; action?: ReactNode; children: ReactNode }) {
