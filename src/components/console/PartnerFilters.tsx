@@ -193,7 +193,7 @@ export function ConfirmDialog({
           <button
             onClick={onConfirm}
             className={`rounded-lg px-3 py-2 text-sm font-bold ${
-              danger ? "bg-discount text-white" : "bg-primary text-primary-foreground"
+              danger ? "bg-discount text-discount-foreground" : "bg-primary text-primary-foreground"
             }`}
           >
             {confirmLabel}
