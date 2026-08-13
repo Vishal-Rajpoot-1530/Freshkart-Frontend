@@ -28,6 +28,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AddressesRouteImport } from './routes/addresses'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RiderIndexRouteImport } from './routes/rider.index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SellerLoginRouteImport } from './routes/seller.login'
 import { Route as RiderLoginRouteImport } from './routes/rider.login'
@@ -132,6 +133,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RiderIndexRoute = RiderIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => RiderRoute,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -199,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/rider/login': typeof RiderLoginRoute
   '/seller/login': typeof SellerLoginRoute
   '/admin/': typeof AdminIndexRoute
+  '/rider/': typeof RiderIndexRoute
   '/admin/riders/$id': typeof AdminRidersIdRoute
   '/admin/sellers/$id': typeof AdminSellersIdRoute
 }
@@ -217,7 +224,6 @@ export interface FileRoutesByTo {
   '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
-  '/rider': typeof RiderRouteWithChildren
   '/search': typeof SearchRoute
   '/seller': typeof SellerRouteWithChildren
   '/wishlist': typeof WishlistRoute
@@ -227,6 +233,7 @@ export interface FileRoutesByTo {
   '/rider/login': typeof RiderLoginRoute
   '/seller/login': typeof SellerLoginRoute
   '/admin': typeof AdminIndexRoute
+  '/rider': typeof RiderIndexRoute
   '/admin/riders/$id': typeof AdminRidersIdRoute
   '/admin/sellers/$id': typeof AdminSellersIdRoute
 }
@@ -257,6 +264,7 @@ export interface FileRoutesById {
   '/rider/login': typeof RiderLoginRoute
   '/seller/login': typeof SellerLoginRoute
   '/admin/': typeof AdminIndexRoute
+  '/rider/': typeof RiderIndexRoute
   '/admin/riders/$id': typeof AdminRidersIdRoute
   '/admin/sellers/$id': typeof AdminSellersIdRoute
 }
@@ -288,6 +296,7 @@ export interface FileRouteTypes {
     | '/rider/login'
     | '/seller/login'
     | '/admin/'
+    | '/rider/'
     | '/admin/riders/$id'
     | '/admin/sellers/$id'
   fileRoutesByTo: FileRoutesByTo
@@ -306,7 +315,6 @@ export interface FileRouteTypes {
     | '/otp'
     | '/profile'
     | '/register'
-    | '/rider'
     | '/search'
     | '/seller'
     | '/wishlist'
@@ -316,6 +324,7 @@ export interface FileRouteTypes {
     | '/rider/login'
     | '/seller/login'
     | '/admin'
+    | '/rider'
     | '/admin/riders/$id'
     | '/admin/sellers/$id'
   id:
@@ -345,6 +354,7 @@ export interface FileRouteTypes {
     | '/rider/login'
     | '/seller/login'
     | '/admin/'
+    | '/rider/'
     | '/admin/riders/$id'
     | '/admin/sellers/$id'
   fileRoutesById: FileRoutesById
@@ -509,6 +519,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rider/': {
+      id: '/rider/'
+      path: '/'
+      fullPath: '/rider/'
+      preLoaderRoute: typeof RiderIndexRouteImport
+      parentRoute: typeof RiderRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/'
@@ -584,10 +601,12 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface RiderRouteChildren {
   RiderLoginRoute: typeof RiderLoginRoute
+  RiderIndexRoute: typeof RiderIndexRoute
 }
 
 const RiderRouteChildren: RiderRouteChildren = {
   RiderLoginRoute: RiderLoginRoute,
+  RiderIndexRoute: RiderIndexRoute,
 }
 
 const RiderRouteWithChildren = RiderRoute._addFileChildren(RiderRouteChildren)
