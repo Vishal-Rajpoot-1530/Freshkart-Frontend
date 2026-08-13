@@ -30,6 +30,7 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as SellerLoginRouteImport } from './routes/seller.login'
+import { Route as RiderLoginRouteImport } from './routes/rider.login'
 import { Route as ProductIdRouteImport } from './routes/product.$id'
 import { Route as OrderIdRouteImport } from './routes/order.$id'
 import { Route as CategorySlugRouteImport } from './routes/category.$slug'
@@ -141,6 +142,11 @@ const SellerLoginRoute = SellerLoginRouteImport.update({
   path: '/login',
   getParentRoute: () => SellerRoute,
 } as any)
+const RiderLoginRoute = RiderLoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => RiderRoute,
+} as any)
 const ProductIdRoute = ProductIdRouteImport.update({
   id: '/product/$id',
   path: '/product/$id',
@@ -183,13 +189,14 @@ export interface FileRoutesByFullPath {
   '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
-  '/rider': typeof RiderRoute
+  '/rider': typeof RiderRouteWithChildren
   '/search': typeof SearchRoute
   '/seller': typeof SellerRouteWithChildren
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
   '/product/$id': typeof ProductIdRoute
+  '/rider/login': typeof RiderLoginRoute
   '/seller/login': typeof SellerLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/riders/$id': typeof AdminRidersIdRoute
@@ -210,13 +217,14 @@ export interface FileRoutesByTo {
   '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
-  '/rider': typeof RiderRoute
+  '/rider': typeof RiderRouteWithChildren
   '/search': typeof SearchRoute
   '/seller': typeof SellerRouteWithChildren
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
   '/product/$id': typeof ProductIdRoute
+  '/rider/login': typeof RiderLoginRoute
   '/seller/login': typeof SellerLoginRoute
   '/admin': typeof AdminIndexRoute
   '/admin/riders/$id': typeof AdminRidersIdRoute
@@ -239,13 +247,14 @@ export interface FileRoutesById {
   '/otp': typeof OtpRoute
   '/profile': typeof ProfileRoute
   '/register': typeof RegisterRoute
-  '/rider': typeof RiderRoute
+  '/rider': typeof RiderRouteWithChildren
   '/search': typeof SearchRoute
   '/seller': typeof SellerRouteWithChildren
   '/wishlist': typeof WishlistRoute
   '/category/$slug': typeof CategorySlugRoute
   '/order/$id': typeof OrderIdRoute
   '/product/$id': typeof ProductIdRoute
+  '/rider/login': typeof RiderLoginRoute
   '/seller/login': typeof SellerLoginRoute
   '/admin/': typeof AdminIndexRoute
   '/admin/riders/$id': typeof AdminRidersIdRoute
@@ -276,6 +285,7 @@ export interface FileRouteTypes {
     | '/category/$slug'
     | '/order/$id'
     | '/product/$id'
+    | '/rider/login'
     | '/seller/login'
     | '/admin/'
     | '/admin/riders/$id'
@@ -303,6 +313,7 @@ export interface FileRouteTypes {
     | '/category/$slug'
     | '/order/$id'
     | '/product/$id'
+    | '/rider/login'
     | '/seller/login'
     | '/admin'
     | '/admin/riders/$id'
@@ -331,6 +342,7 @@ export interface FileRouteTypes {
     | '/category/$slug'
     | '/order/$id'
     | '/product/$id'
+    | '/rider/login'
     | '/seller/login'
     | '/admin/'
     | '/admin/riders/$id'
@@ -353,7 +365,7 @@ export interface RootRouteChildren {
   OtpRoute: typeof OtpRoute
   ProfileRoute: typeof ProfileRoute
   RegisterRoute: typeof RegisterRoute
-  RiderRoute: typeof RiderRoute
+  RiderRoute: typeof RiderRouteWithChildren
   SearchRoute: typeof SearchRoute
   SellerRoute: typeof SellerRouteWithChildren
   WishlistRoute: typeof WishlistRoute
@@ -511,6 +523,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SellerLoginRouteImport
       parentRoute: typeof SellerRoute
     }
+    '/rider/login': {
+      id: '/rider/login'
+      path: '/login'
+      fullPath: '/rider/login'
+      preLoaderRoute: typeof RiderLoginRouteImport
+      parentRoute: typeof RiderRoute
+    }
     '/product/$id': {
       id: '/product/$id'
       path: '/product/$id'
@@ -563,6 +582,16 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface RiderRouteChildren {
+  RiderLoginRoute: typeof RiderLoginRoute
+}
+
+const RiderRouteChildren: RiderRouteChildren = {
+  RiderLoginRoute: RiderLoginRoute,
+}
+
+const RiderRouteWithChildren = RiderRoute._addFileChildren(RiderRouteChildren)
+
 interface SellerRouteChildren {
   SellerLoginRoute: typeof SellerLoginRoute
 }
@@ -590,7 +619,7 @@ const rootRouteChildren: RootRouteChildren = {
   OtpRoute: OtpRoute,
   ProfileRoute: ProfileRoute,
   RegisterRoute: RegisterRoute,
-  RiderRoute: RiderRoute,
+  RiderRoute: RiderRouteWithChildren,
   SearchRoute: SearchRoute,
   SellerRoute: SellerRouteWithChildren,
   WishlistRoute: WishlistRoute,
