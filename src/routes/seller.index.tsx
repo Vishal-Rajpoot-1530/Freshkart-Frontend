@@ -100,7 +100,13 @@ function SellerPage() {
                   <YAxis tickLine={false} axisLine={false} fontSize={11} tickFormatter={(v: number) => `${v / 1000}k`} />
                   <Tooltip
                     contentStyle={{ borderRadius: 12, border: "1px solid var(--color-border)", background: "var(--color-card)", fontSize: 12 }}
-                    formatter={(v: number, n) => (n === "orders" ? [`${v} orders`, "Orders"] : [inr(v), n === "target" ? "Daily target" : "Sales"])}
+                    formatter={(v, _n, item) => {
+                      const key = (item as { dataKey?: string })?.dataKey;
+                      const num = Number(v);
+                      if (key === "orders") return [`${num} orders`, "Orders"];
+                      if (key === "target") return [inr(num), "Daily target"];
+                      return [inr(num), "Sales"];
+                    }}
                   />
                   <Legend wrapperStyle={{ fontSize: 11 }} />
                   <Bar dataKey="value" name="Sales" radius={[6, 6, 0, 0]} fill="var(--color-primary)" maxBarSize={38} />
