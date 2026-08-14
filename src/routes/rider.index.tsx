@@ -135,10 +135,10 @@ function RiderPage() {
         </div>
       )}
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <StatCard label="Earnings today" value={`₹${(me?.earningsMonth ? Math.round(me.earningsMonth / 30) : 1286).toLocaleString("en-IN")}`} delta="+₹210" icon={IndianRupee} />
-        <StatCard label="Deliveries today" value="14" icon={Bike} />
-        <StatCard label="Avg drop time" value="8 min 40 s" icon={Timer} tone="offer" />
-        <StatCard label="Rating" value={`${me?.rating ?? 4.9} ★`} icon={Star} tone="discount" />
+        <StatCard label="Earnings today" value={inr(earnToday)} delta={`+${inr(tipsToday)} tips`} icon={IndianRupee} onClick={() => setModal("earnings")} hint="See breakdown" />
+        <StatCard label="Deliveries today" value={`${deliveriesToday.length}`} icon={Bike} onClick={() => setModal("deliveries")} hint="See all drops" />
+        <StatCard label="Avg drop time" value={`${Math.floor(avgDrop)} min ${Math.round((avgDrop % 1) * 60)} s`} icon={Timer} tone="offer" onClick={() => setModal("dropTime")} hint="See per-trip times" />
+        <StatCard label="Rating" value={`${me?.rating ?? 4.9} ★`} icon={Star} tone="discount" onClick={() => setModal("rating")} hint="Read reviews" />
       </div>
 
       <div className="mt-4 grid gap-4 lg:grid-cols-3">
