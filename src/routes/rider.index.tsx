@@ -1,12 +1,65 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Bike, IndianRupee, Timer, Navigation, MapPin, Phone, CheckCircle2, Star } from "lucide-react";
+import { Bike, IndianRupee, Timer, Navigation, MapPin, Phone, CheckCircle2, Star, X } from "lucide-react";
 import { toast } from "sonner";
-import { useState } from "react";
-import { ConsoleLayout, StatCard, Panel, Pill, Bars } from "@/components/console/ConsoleLayout";
+import { useMemo, useState, type ReactNode } from "react";
+import { BarChart, Bar as RBar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Cell } from "recharts";
+import { ConsoleLayout, StatCard, Panel, Pill } from "@/components/console/ConsoleLayout";
 import { products } from "@/data/products";
 import { usePartners } from "@/context/PartnersContext";
 import { usePartnerAuth } from "@/context/PartnerAuthContext";
 import { StatusPill } from "@/components/console/PartnerControls";
+
+const inr = (n: number) => `₹${n.toLocaleString("en-IN")}`;
+
+const deliveriesToday = Array.from({ length: 14 }, (_, i) => ({
+  id: `FK7823${(20 + i).toString().padStart(2, "0")}`,
+  drop: ["Sector 2, HSR", "27th Main, HSR", "5th Block, Koramangala", "Sector 6, HSR", "1st Sector, HSR"][i % 5],
+  km: Number((1 + ((i * 7) % 25) / 10).toFixed(1)),
+  minutes: 6 + (i % 7),
+  payout: 38 + ((i * 9) % 34),
+  tip: i % 4 === 0 ? 10 + (i % 3) * 5 : 0,
+  time: `${9 + Math.floor(i / 2)}:${i % 2 ? "40" : "05"} ${9 + Math.floor(i / 2) >= 12 ? "PM" : "AM"}`,
+  items: 3 + (i % 9),
+}));
+
+const riderReviews = [
+  { id: "r1", customer: "Aarav Sharma", rating: 5, comment: "Reached before time and handled the bag carefully.", date: "Today" },
+  { id: "r2", customer: "Diya Patel", rating: 5, comment: "Very polite rider, called before arriving.", date: "Today" },
+  { id: "r3", customer: "Kabir Iyer", rating: 4, comment: "Good delivery, took a slightly longer route.", date: "Yesterday" },
+  { id: "r4", customer: "Meera Nair", rating: 5, comment: "Fast and friendly, packaging intact.", date: "Yesterday" },
+  { id: "r5", customer: "Rohan Das", rating: 5, comment: "Best rider in our area, always on time.", date: "2 days ago" },
+  { id: "r6", customer: "Ishita Roy", rating: 3, comment: "Delivery was fine but had to wait at the gate.", date: "3 days ago" },
+];
+
+function Modal({ title, subtitle, onClose, children }: { title: string; subtitle?: string; onClose: () => void; children: ReactNode }) {
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-foreground/40 p-0 sm:p-6" role="dialog" aria-modal="true">
+      <div className="absolute inset-0" onClick={onClose} aria-hidden />
+      <div className="relative w-full sm:max-w-2xl max-h-[88dvh] overflow-y-auto rounded-t-3xl sm:rounded-3xl border bg-card p-5 shadow-lift">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="font-display text-xl font-black">{title}</h2>
+            {subtitle && <p className="text-xs text-muted-foreground">{subtitle}</p>}
+          </div>
+          <button onClick={onClose} className="grid size-9 place-items-center rounded-xl hover:bg-muted" aria-label="Close">
+            <X className="size-4" />
+          </button>
+        </div>
+        <div className="mt-4">{children}</div>
+      </div>
+    </div>
+  );
+}
+
+function Stars({ n }: { n: number }) {
+  return (
+    <span className="flex items-center gap-0.5">
+      {Array.from({ length: 5 }, (_, i) => (
+        <Star key={i} className={`size-3.5 ${i < n ? "fill-offer text-offer" : "text-muted-foreground"}`} />
+      ))}
+    </span>
+  );
+}
 
 export const Route = createFileRoute("/rider/")({
   head: () => ({
