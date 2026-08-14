@@ -1,14 +1,97 @@
-import type { ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { Link, useRouter } from "@tanstack/react-router";
-import { motion } from "framer-motion";
-import { LayoutDashboard, Bike, Store, ArrowLeft, Bell, Search, LogOut } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Bell, Search, LogOut, CheckCheck } from "lucide-react";
 import { usePartnerAuth } from "@/context/PartnerAuthContext";
 
-const portals = [
-  { to: "/admin" as const, label: "Admin", icon: LayoutDashboard },
-  { to: "/rider" as const, label: "Rider", icon: Bike },
-  { to: "/seller" as const, label: "Seller", icon: Store },
-];
+const consoleNotifications: Record<string, { id: string; title: string; body: string; time: string }[]> = {
+  Rider: [
+    { id: "n1", title: "New pickup nearby", body: "FK782344 · HSR Store 02 · ₹42 payout", time: "just now" },
+    { id: "n2", title: "Incentive unlocked", body: "Complete 4 more drops for a ₹120 bonus.", time: "18 min ago" },
+    { id: "n3", title: "Payout credited", body: "₹5,160 for last week sent to your account.", time: "Yesterday" },
+  ],
+  Seller: [
+    { id: "n1", title: "New order received", body: "FK782390 · 6 items · pack before 4:30 PM", time: "just now" },
+    { id: "n2", title: "Low stock alert", body: "3 SKUs are below the reorder level.", time: "42 min ago" },
+    { id: "n3", title: "Payout scheduled", body: "Next settlement lands on Friday.", time: "Yesterday" },
+  ],
+  Admin: [
+    { id: "n1", title: "3 partners pending review", body: "2 riders and 1 seller await verification.", time: "just now" },
+    { id: "n2", title: "SLA breach", body: "Koramangala store average drop time is 14 min.", time: "1 h ago" },
+    { id: "n3", title: "Weekly report ready", body: "Operations summary for last week is available.", time: "Yesterday" },
+  ],
+};
+
+function NotificationBell({ badge }: { badge: string }) {
+  const [open, setOpen] = useState(false);
+  const items = consoleNotifications[badge] ?? consoleNotifications.Admin;
+  const [readIds, setReadIds] = useState<string[]>([]);
+  const ref = useRef<HTMLDivElement>(null);
+  const unread = items.filter((i) => !readIds.includes(i.id)).length;
+
+  useEffect(() => {
+    if (!open) return;
+    const onDoc = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDoc);
+    return () => document.removeEventListener("mousedown", onDoc);
+  }, [open]);
+
+  return (
+    <div className="relative" ref={ref}>
+      <button
+        onClick={() => setOpen((o) => !o)}
+        className="grid size-10 place-items-center rounded-xl hover:bg-muted relative"
+        aria-label={`Notifications${unread ? `, ${unread} unread` : ""}`}
+        aria-expanded={open}
+      >
+        <Bell className="size-5" />
+        {unread > 0 && <span className="absolute top-2 right-2 size-2 rounded-full bg-discount" />}
+      </button>
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -6 }}
+            className="absolute right-0 mt-2 w-[min(20rem,calc(100vw-2rem))] rounded-2xl border bg-card p-3 shadow-lift z-50"
+          >
+            <div className="flex items-center justify-between gap-2 pb-2">
+              <span className="font-display text-sm font-black">Notifications</span>
+              <button
+                onClick={() => setReadIds(items.map((i) => i.id))}
+                className="inline-flex items-center gap-1 text-[11px] font-bold text-primary hover:underline"
+              >
+                <CheckCheck className="size-3.5" /> Mark all read
+              </button>
+            </div>
+            <ul className="space-y-2 max-h-72 overflow-y-auto">
+              {items.map((n) => {
+                const isRead = readIds.includes(n.id);
+                return (
+                  <li key={n.id}>
+                    <button
+                      onClick={() => setReadIds((r) => (r.includes(n.id) ? r : [...r, n.id]))}
+                      className={`w-full text-left rounded-xl border p-3 transition-colors hover:border-primary ${isRead ? "opacity-60" : "bg-surface"}`}
+                    >
+                      <div className="flex items-center gap-2">
+                        {!isRead && <span className="size-1.5 rounded-full bg-primary shrink-0" />}
+                        <span className="text-sm font-semibold">{n.title}</span>
+                        <span className="ml-auto text-[10px] text-muted-foreground shrink-0">{n.time}</span>
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground">{n.body}</p>
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
 
 function SessionButton() {
   const { session, signOut } = usePartnerAuth();
