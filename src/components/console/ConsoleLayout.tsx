@@ -176,15 +176,20 @@ export function ConsoleLayout({
 }
 
 export function ConsoleFooter({ badge }: { badge: string }) {
+  const isAdmin = badge === "Admin";
   const groups = [
-    {
-      title: "Consoles",
-      links: [
-        { to: "/admin" as const, label: "Admin dashboard" },
-        { to: "/seller" as const, label: "Seller centre" },
-        { to: "/rider" as const, label: "Rider hub" },
-      ],
-    },
+    ...(isAdmin
+      ? [
+          {
+            title: "Consoles",
+            links: [
+              { to: "/admin" as const, label: "Admin dashboard" },
+              { to: "/seller" as const, label: "Seller centre" },
+              { to: "/rider" as const, label: "Rider hub" },
+            ],
+          },
+        ]
+      : []),
     {
       title: "Partner resources",
       links: [
@@ -193,20 +198,24 @@ export function ConsoleFooter({ badge }: { badge: string }) {
         { to: "/about" as const, label: "About FreshKart" },
       ],
     },
-    {
-      title: "Storefront",
-      links: [
-        { to: "/" as const, label: "Home" },
-        { to: "/orders" as const, label: "Orders" },
-        { to: "/notifications" as const, label: "Notifications" },
-      ],
-    },
+    ...(isAdmin
+      ? [
+          {
+            title: "Storefront",
+            links: [
+              { to: "/" as const, label: "Home" },
+              { to: "/orders" as const, label: "Orders" },
+              { to: "/notifications" as const, label: "Notifications" },
+            ],
+          },
+        ]
+      : []),
   ];
 
   return (
     <footer className="border-t bg-card">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-10">
-        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        <div className={`grid gap-8 sm:grid-cols-2 ${isAdmin ? "lg:grid-cols-4" : "lg:grid-cols-2"}`}>
           <div>
             <div className="flex items-center gap-2">
               <div className="grid size-9 place-items-center rounded-xl bg-primary text-primary-foreground font-black">F</div>
