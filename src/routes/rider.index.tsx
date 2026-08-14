@@ -98,6 +98,8 @@ const timeline = [
   { t: "2:24 PM", label: "Delivered", done: false },
 ];
 
+type RiderModal = "earnings" | "deliveries" | "dropTime" | "rating" | null;
+
 function RiderPage() {
   const { rider, canAcceptOrders } = usePartners();
   const { session } = usePartnerAuth();
@@ -106,6 +108,17 @@ function RiderPage() {
   const active = canAcceptOrders(id);
   const first = (me?.name ?? "Rider").split(" ")[0];
   const [queue, setQueue] = useState(initialQueue);
+  const [modal, setModal] = useState<RiderModal>(null);
+  const [day, setDay] = useState<string | null>(null);
+
+  const tipsToday = useMemo(() => deliveriesToday.reduce((s, d) => s + d.tip, 0), []);
+  const earnToday = useMemo(() => deliveriesToday.reduce((s, d) => s + d.payout + d.tip, 0), []);
+  const avgDrop = useMemo(
+    () => deliveriesToday.reduce((s, d) => s + d.minutes, 0) / deliveriesToday.length,
+    [],
+  );
+  const weekTotal = earningsWeek.reduce((s, d) => s + d.value, 0);
+
 
   return (
     <ConsoleLayout
