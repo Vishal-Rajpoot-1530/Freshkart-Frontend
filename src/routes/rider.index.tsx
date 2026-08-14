@@ -218,11 +218,148 @@ function RiderPage() {
             )}
           </Panel>
 
-          <Panel title="Earnings this week" action={<Pill label="₹5,160" tone="primary" />}>
-            <Bars data={earningsWeek} />
+          <Panel title="Earnings this week" action={<Pill label={inr(weekTotal)} tone="primary" />}>
+            <div className="h-48 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <BarChart data={earningsWeek} margin={{ top: 8, right: 4, left: -18, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                  <XAxis dataKey="label" tickLine={false} axisLine={false} fontSize={11} />
+                  <YAxis tickLine={false} axisLine={false} fontSize={11} />
+                  <Tooltip
+                    cursor={{ fill: "var(--color-muted)" }}
+                    contentStyle={{ borderRadius: 12, border: "1px solid var(--color-border)", background: "var(--color-card)", fontSize: 12 }}
+                    formatter={(v) => [inr(Number(v)), "Earnings"]}
+                  />
+                  <RBar dataKey="value" radius={[6, 6, 0, 0]} maxBarSize={30} onClick={(d: { label?: string }) => setDay(d?.label ?? null)}>
+                    {earningsWeek.map((d) => (
+                      <Cell key={d.label} fill={day === d.label ? "var(--color-offer-foreground)" : "var(--color-primary)"} className="cursor-pointer" />
+                    ))}
+                  </RBar>
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <p className="mt-2 text-[11px] text-muted-foreground">Tap a bar to see that day's breakdown.</p>
           </Panel>
         </div>
       </div>
+
+      {modal === "earnings" && (
+        <Modal title="Earnings today" subtitle={`${deliveriesToday.length} trips · ${inr(tipsToday)} in tips`} onClose={() => setModal(null)}>
+          <div className="grid gap-3 sm:grid-cols-3">
+            {[
+              { k: "Trip payouts", v: inr(earnToday - tipsToday) },
+              { k: "Customer tips", v: inr(tipsToday) },
+              { k: "Total credited", v: inr(earnToday) },
+            ].map((r) => (
+              <div key={r.k} className="rounded-xl border bg-surface p-3">
+                <div className="text-xs text-muted-foreground">{r.k}</div>
+                <div className="font-display text-lg font-black">{r.v}</div>
+              </div>
+            ))}
+          </div>
+          <ul className="mt-4 divide-y rounded-xl border">
+            {deliveriesToday.map((d) => (
+              <li key={d.id} className="flex items-center justify-between gap-3 p-3 text-sm">
+                <div className="min-w-0">
+                  <div className="font-mono text-xs font-bold">{d.id}</div>
+                  <div className="text-xs text-muted-foreground truncate">{d.time} · {d.drop}</div>
+                </div>
+                <div className="text-right shrink-0">
+                  <div className="font-bold">{inr(d.payout + d.tip)}</div>
+                  {d.tip > 0 && <div className="text-[11px] text-primary">incl. {inr(d.tip)} tip</div>}
+                </div>
+              </li>
+            ))}
+          </ul>
+        </Modal>
+      )}
+
+      {modal === "deliveries" && (
+        <Modal title="Deliveries today" subtitle={`${deliveriesToday.length} completed drops`} onClose={() => setModal(null)}>
+          <div className="overflow-x-auto rounded-xl border">
+            <table className="w-full text-sm">
+              <thead className="bg-surface text-xs text-muted-foreground">
+                <tr>
+                  <th className="p-3 text-left">Order</th>
+                  <th className="p-3 text-left">Drop</th>
+                  <th className="p-3 text-right">Distance</th>
+                  <th className="p-3 text-right">Time</th>
+                  <th className="p-3 text-right">Payout</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {deliveriesToday.map((d) => (
+                  <tr key={d.id}>
+                    <td className="p-3 font-mono text-xs font-bold">{d.id}</td>
+                    <td className="p-3">{d.drop}<div className="text-xs text-muted-foreground">{d.items} items · {d.time}</div></td>
+                    <td className="p-3 text-right">{d.km} km</td>
+                    <td className="p-3 text-right">{d.minutes} min</td>
+                    <td className="p-3 text-right font-bold">{inr(d.payout + d.tip)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </Modal>
+      )}
+
+      {modal === "dropTime" && (
+        <Modal title="Average drop time" subtitle="Time from pickup to hand-over, today" onClose={() => setModal(null)}>
+          <ul className="divide-y rounded-xl border">
+            {deliveriesToday.map((d) => (
+              <li key={d.id} className="flex items-center gap-3 p-3 text-sm">
+                <span className="font-mono text-xs font-bold w-24">{d.id}</span>
+                <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
+                  <div className="h-full rounded-full bg-primary" style={{ width: `${(d.minutes / 13) * 100}%` }} />
+                </div>
+                <span className="w-16 text-right font-semibold">{d.minutes} min</span>
+              </li>
+            ))}
+          </ul>
+        </Modal>
+      )}
+
+      {modal === "rating" && (
+        <Modal title="Customer reviews" subtitle={`${me?.rating ?? 4.9} ★ average across ${riderReviews.length} recent ratings`} onClose={() => setModal(null)}>
+          <ul className="space-y-3">
+            {riderReviews.map((r) => (
+              <li key={r.id} className="rounded-xl border p-3">
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-sm font-semibold">{r.customer}</span>
+                  <Stars n={r.rating} />
+                </div>
+                <p className="mt-1 text-sm text-muted-foreground">{r.comment}</p>
+                <div className="mt-1 text-[11px] text-muted-foreground">{r.date}</div>
+              </li>
+            ))}
+          </ul>
+        </Modal>
+      )}
+
+      {day && (
+        <Modal title={`${day} earnings`} subtitle="Daily breakdown" onClose={() => setDay(null)}>
+          {(() => {
+            const d = earningsWeek.find((x) => x.label === day)!;
+            return (
+              <div className="grid gap-3 sm:grid-cols-2">
+                {[
+                  { k: "Total earnings", v: inr(d.value) },
+                  { k: "Trips completed", v: `${d.trips}` },
+                  { k: "Hours online", v: `${d.hours} h` },
+                  { k: "Tips", v: inr(d.tips) },
+                  { k: "Avg per trip", v: inr(Math.round(d.value / d.trips)) },
+                  { k: "Avg per hour", v: inr(Math.round(d.value / d.hours)) },
+                ].map((r) => (
+                  <div key={r.k} className="rounded-xl border bg-surface p-3">
+                    <div className="text-xs text-muted-foreground">{r.k}</div>
+                    <div className="font-display text-lg font-black">{r.v}</div>
+                  </div>
+                ))}
+              </div>
+            );
+          })()}
+        </Modal>
+      )}
     </ConsoleLayout>
   );
 }
