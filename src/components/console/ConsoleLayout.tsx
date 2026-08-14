@@ -138,20 +138,6 @@ export function ConsoleLayout({
               </div>
             </Link>
 
-            <nav className="ml-2 flex items-center gap-1 overflow-x-auto no-scrollbar">
-              {portals.map((p) => (
-                <Link
-                  key={p.to}
-                  to={p.to}
-                  activeProps={{ className: "bg-primary-soft text-primary" }}
-                  inactiveProps={{ className: "text-muted-foreground hover:bg-muted" }}
-                  className="shrink-0 flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-semibold transition-colors"
-                >
-                  <p.icon className="size-4" /> {p.label}
-                </Link>
-              ))}
-            </nav>
-
             <div className="ml-auto flex items-center gap-1">
               <label className="hidden md:flex items-center gap-2 rounded-xl border bg-card px-3 py-2 focus-within:border-primary transition-colors">
                 <Search className="size-4 text-muted-foreground" />
@@ -161,17 +147,8 @@ export function ConsoleLayout({
                   className="w-44 bg-transparent text-sm outline-none placeholder:text-muted-foreground"
                 />
               </label>
-              <button className="grid size-10 place-items-center rounded-xl hover:bg-muted relative" aria-label="Notifications">
-                <Bell className="size-5" />
-                <span className="absolute top-2 right-2 size-2 rounded-full bg-discount" />
-              </button>
+              <NotificationBell badge={badge} />
               <SessionButton />
-              <Link
-                to="/"
-                className="flex items-center gap-1.5 rounded-xl border bg-card px-3 py-2 text-xs font-semibold hover:border-primary transition-colors"
-              >
-                <ArrowLeft className="size-3.5" /> <span className="hidden sm:inline">Storefront</span>
-              </Link>
             </div>
           </div>
         </div>
