@@ -76,8 +76,13 @@ export const Route = createFileRoute("/rider/")({
 });
 
 const earningsWeek = [
-  { label: "Mon", value: 640 }, { label: "Tue", value: 720 }, { label: "Wed", value: 810 },
-  { label: "Thu", value: 690 }, { label: "Fri", value: 980 }, { label: "Sat", value: 1240 }, { label: "Sun", value: 1080 },
+  { label: "Mon", value: 640, trips: 11, hours: 6.5, tips: 40 },
+  { label: "Tue", value: 720, trips: 12, hours: 7, tips: 30 },
+  { label: "Wed", value: 810, trips: 14, hours: 7.5, tips: 55 },
+  { label: "Thu", value: 690, trips: 12, hours: 6.5, tips: 25 },
+  { label: "Fri", value: 980, trips: 17, hours: 8.5, tips: 70 },
+  { label: "Sat", value: 1240, trips: 21, hours: 9.5, tips: 110 },
+  { label: "Sun", value: 1080, trips: 18, hours: 9, tips: 85 },
 ];
 
 const initialQueue = [
